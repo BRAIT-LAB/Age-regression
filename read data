@@ -1,0 +1,29 @@
+clc;clear;
+maindir = 'C:\MATLAB\Barbados';
+subdir = dir(maindir);
+n=length(subdir);
+%读取数据
+for i=3:n
+    t = subdir(i).name;
+    a{i-2,1}=t;
+end
+
+%提取特征
+for i=1:n-2
+    testdata = load(['C:\MATLAB\Barbados\',a{i,1}]);
+    all{i,1}=testdata.data_struct.CrossM;
+    all{i,2}=testdata.data_struct.freqrange;
+    all{i,3}=testdata.data_struct.Spec;
+    all{i,4}=testdata.data_struct.Spec_freqrange;
+    all{i,5}=testdata.data_struct.age;
+end
+
+%求相干，将复数矩阵变为实矩阵
+for i=1:n-2
+    xg{i,1}=cs2coh(all{i,1});
+end
+
+%提取每个平面
+for i=1:128
+    en{i,1}=xg{1,1}(:,:,i);
+end
